@@ -1,0 +1,58 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function App() {
+  const [numberId, setNumberId] = useState('');
+  const [prevState, setPrevState] = useState([]);
+  const [currState, setCurrState] = useState([]);
+  const [newNumbers, setNewNumbers] = useState([]);
+  const [average, setAverage] = useState(0);
+
+  const fetchNumbers = async () => {
+    try {
+      const response = await axios.get(http://127.0.0.1:5000/numbers/${numberId});
+      setPrevState(response.data.windowPrevState);
+      setCurrState(response.data.windowCurrState);
+      setNewNumbers(response.data.numbers);
+      setAverage(response.data.avg);
+    } catch (error) {
+      console.error('Error fetching numbers:', error);
+    }
+  };
+
+  return (
+    React.createElement('div', { className: 'container' },
+      React.createElement('h1', { className: 'title' }, 'Average Calculator'),
+      React.createElement('input', {
+        className: 'input',
+        type: 'text',
+        placeholder: 'Enter number ID (p, f, e, r)',
+        value: numberId,
+        onChange: (e) => setNumberId(e.target.value)
+      }),
+      React.createElement('button', { className: 'button', onClick: fetchNumbers }, 'Fetch Numbers'),
+      React.createElement('h2', { className: 'subtitle' }, 'Previous State:'),
+      React.createElement('ul', { className: 'list' }, 
+        prevState.map((item, index) => 
+          React.createElement('li', { key: index, className: 'item' }, item)
+        )
+      ),
+      React.createElement('h2', { className: 'subtitle' }, 'Current State:'),
+      React.createElement('ul', { className: 'list' }, 
+        currState.map((item, index) => 
+          React.createElement('li', { key: index, className: 'item' }, item)
+        )
+      ),
+      React.createElement('h2', { className: 'subtitle' }, 'New Numbers:'),
+      React.createElement('ul', { className: 'list' }, 
+        newNumbers.map((item, index) => 
+          React.createElement('li', { key: index, className: 'item' }, item)
+        )
+      ),
+      React.createElement('h2', { className: 'subtitle' }, 'Average:'),
+      React.createElement('div', { className: 'average' }, average.toFixed(2))
+    )
+  );
+}
+
+export default App;
